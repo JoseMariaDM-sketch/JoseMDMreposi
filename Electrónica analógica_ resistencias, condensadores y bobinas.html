@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Electrónica analógica: resistencias, condensadores y bobinas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2f6;--card:#fff;--ink:#14213d;--mut:#51607a;--line:#c9d3e0;--acc:#2457d6;--acc2:#f2a900;--ok:#1b8a5a;--soft:#e3ebfa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1624;--card:#17213a;--ink:#e8eefb;--mut:#9fb0cf;--line:#2b3a5c;--acc:#7aa2ff;--acc2:#ffc233;--ok:#4cd39a;--soft:#1f2d50;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1624;--card:#17213a;--ink:#e8eefb;--mut:#9fb0cf;--line:#2b3a5c;--acc:#7aa2ff;--acc2:#ffc233;--ok:#4cd39a;--soft:#1f2d50;color-scheme:dark}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Source Sans 3",system-ui,sans-serif}
+header{max-width:960px;margin:0 auto;padding:36px 20px 8px}
+h1,h2,h3{font-family:"Bricolage Grotesque","Segoe UI",sans-serif;line-height:1.15;margin:0}
+h1{font-size:clamp(30px,6vw,52px);font-weight:800;letter-spacing:-.02em}
+header p{color:var(--mut);max-width:60ch;margin:12px 0 0}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-top:18px}
+nav div{max-width:960px;margin:0 auto;padding:8px 20px;display:flex;gap:6px;overflow-x:auto}
+nav button{flex:none;font:600 15px "Source Sans 3",sans-serif;color:var(--mut);background:none;border:1px solid transparent;border-radius:8px;padding:8px 14px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+nav button:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+main{max-width:960px;margin:0 auto;padding:24px 20px 60px}
+section{display:none}section.on{display:block}
+h2{font-size:clamp(24px,4vw,34px);margin-bottom:6px}
+h3{font-size:20px;margin:28px 0 8px}
+p{margin:8px 0;max-width:68ch}
+.lead{color:var(--mut)}
+.f{background:var(--soft);border-left:5px solid var(--acc);padding:10px 16px;margin:12px 0;border-radius:0 8px 8px 0;font-size:19px;font-style:italic;overflow-x:auto}
+.f small{display:block;font-style:normal;font-size:15px;color:var(--mut)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin:12px 0}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.box h4{margin:0 0 4px;font:700 17px "Bricolage Grotesque",sans-serif}
+.box p{margin:4px 0;font-size:16px}
+.lab{background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:16px;margin:16px 0}
+.lab h3{margin:0 0 10px}
+label{display:block;font-weight:600;font-size:15px;margin:8px 0 3px}
+input,select{font:inherit;width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.row{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+.res{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-top:12px}
+.res div{background:var(--soft);border-radius:8px;padding:8px 12px}
+.res b{display:block;font-size:22px;font-family:"Bricolage Grotesque",sans-serif}
+.res span{font-size:14px;color:var(--mut)}
+.btn{width:auto;display:inline-block;margin-top:10px;font:600 15px "Source Sans 3",sans-serif;background:var(--acc);color:var(--bg);border:0;border-radius:8px;padding:8px 14px;cursor:pointer}
+table{border-collapse:collapse;width:100%;font-size:16px}
+.tw{overflow-x:auto;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:6px 10px;text-align:left}
+.tip{color:var(--ok);font-weight:600}
+svg text{font:600 13px "Source Sans 3",sans-serif;fill:var(--ink)}
+</style>
+</head>
+<body>
+<header>
+<h1>Electrónica analógica, paso a paso</h1>
+<p>Teoría y calculadoras para resistencias, condensadores y bobinas. Las fórmulas y los ejemplos siguen los capítulos 1 y 2 del libro; cambia los valores y mira cómo responde el resultado.</p>
+</header>
+<nav><div role="tablist" id="tabs"></div></nav>
+<main>
+
+<section id="t0">
+<h2>Fundamentos de la electricidad</h2>
+<p class="lead">Todo circuito se describe con cuatro magnitudes que se relacionan entre sí.</p>
+<div class="grid">
+<div class="box"><h4>Tensión (V), voltio</h4><p>Diferencia de potencial entre dos puntos. Es lo que “empuja” a los electrones.</p></div>
+<div class="box"><h4>Intensidad (I), amperio</h4><p>Cantidad de carga que circula por segundo: I = Q / t. Un amperio son 6,3·10<sup>18</sup> electrones por segundo.</p></div>
+<div class="box"><h4>Resistencia (R), ohmio</h4><p>Oposición al paso de corriente. En un conductor: R = ρ·l / S.</p></div>
+<div class="box"><h4>Potencia (P), vatio</h4><p>Energía por segundo que absorbe un componente. 1 CV = 736 W.</p></div>
+</div>
+<h3>Las leyes básicas</h3>
+<div class="f">Ley de Ohm: V = I · R<small>La tensión entre los extremos de un componente es la intensidad que lo atraviesa por su resistencia.</small></div>
+<div class="f">Potencia: P = V · I = I² · R = V² / R<small>Energía: E = P · t (en kW·h si P va en kW y t en horas).</small></div>
+<div class="f">Ley de Joule: Q (calorías) = 0,24 · I² · R · t<small>El calor que desprende un conductor aumenta con el cuadrado de la corriente.</small></div>
+<div class="f">1.ª ley de Kirchhoff (nudos): ΣI entrantes = ΣI salientes<small>En un nudo no se acumula carga.</small></div>
+<div class="f">2.ª ley de Kirchhoff (mallas): ΣE = ΣI · R<small>En una malla, la suma de las fuerzas electromotrices es igual a la suma de las caídas de tensión.</small></div>
+<h3>Prefijos</h3>
+<div class="tw"><table><tr><th>Prefijo</th><th>Símbolo</th><th>Factor</th></tr>
+<tr><td>giga</td><td>G</td><td>10<sup>9</sup></td></tr><tr><td>mega</td><td>M</td><td>10<sup>6</sup></td></tr><tr><td>kilo</td><td>k</td><td>10<sup>3</sup></td></tr>
+<tr><td>mili</td><td>m</td><td>10<sup>−3</sup></td></tr><tr><td>micro</td><td>µ</td><td>10<sup>−6</sup></td></tr><tr><td>nano</td><td>n</td><td>10<sup>−9</sup></td></tr><tr><td>pico</td><td>p</td><td>10<sup>−12</sup></td></tr></table></div>
+<div class="lab"><h3>Calculadora de la ley de Ohm</h3>
+<p>Rellena dos casillas (V en voltios, I en amperios, R en ohmios) y deja la tercera vacía.</p>
+<div class="row"><div><label for="ov">Tensión V</label><input id="ov" inputmode="decimal" value="12"></div><div><label for="oi">Intensidad I</label><input id="oi" inputmode="decimal" placeholder="vacía"></div><div><label for="or">Resistencia R</label><input id="or" inputmode="decimal" value="470"></div></div>
+<div class="res" id="oout"></div></div>
+</section>
+
+<section id="t1">
+<h2>Tipos de resistencias</h2>
+<p class="lead">Una resistencia limita la corriente, divide tensiones o convierte energía en calor. Se clasifican según si su valor se puede cambiar.</p>
+<div class="grid">
+<div class="box"><h4>Fijas de carbón</h4><p>Baratas y comunes, con tolerancia del 5 % al 10 %. Ruido algo alto.</p></div>
+<div class="box"><h4>Fijas de película metálica</h4><p>Más precisas (1 %) y estables con la temperatura. Muy usadas en instrumentación.</p></div>
+<div class="box"><h4>Bobinadas</h4><p>Hilo de nicrom o constantán sobre un soporte cerámico. Aguantan potencias altas (vatios).</p></div>
+<div class="box"><h4>Potenciómetros y reóstatos</h4><p>Resistencia variable con un cursor. El ajustable o “trimmer” se regula una sola vez.</p></div>
+<div class="box"><h4>NTC y PTC</h4><p>Su valor depende de la temperatura. NTC: baja al calentarse. PTC: sube.</p></div>
+<div class="box"><h4>LDR y VDR</h4><p>La LDR varía con la luz; la VDR (varistor) con la tensión aplicada.</p></div>
+</div>
+<h3>Valor de un hilo conductor</h3>
+<div class="f">R = ρ · l / S<small>ρ en Ω·mm²/m, l en metros, S en mm². Cobre: ρ = 1,8·10<sup>−2</sup>; aluminio: 2,8·10<sup>−2</sup>.</small></div>
+<div class="f">R<sub>t</sub> = R<sub>0</sub> · (1 + α · Δt)<small>La resistencia cambia con la temperatura. Cobre: α = 0,0042 Ω/°C.</small></div>
+<div class="lab"><h3>Código de colores (4 bandas)</h3>
+<svg id="rsvg" viewBox="0 0 320 70" width="100%" role="img" aria-label="Resistencia con bandas de color"><line x1="0" y1="35" x2="320" y2="35" stroke="#8a93a3" stroke-width="4"/><rect x="50" y="10" width="220" height="50" rx="22" fill="#d9c49a"/><rect id="b1" x="85" y="10" width="14" height="50"/><rect id="b2" x="115" y="10" width="14" height="50"/><rect id="b3" x="145" y="10" width="14" height="50"/><rect id="b4" x="215" y="10" width="14" height="50"/></svg>
+<div class="row"><div><label for="c1">1.ª banda</label><select id="c1"></select></div><div><label for="c2">2.ª banda</label><select id="c2"></select></div><div><label for="c3">Multiplicador</label><select id="c3"></select></div><div><label for="c4">Tolerancia</label><select id="c4"></select></div></div>
+<div class="res" id="cout"></div></div>
+<p>Truco: las dos primeras bandas son cifras, la tercera es el número de ceros, y la banda dorada o plateada (separada de las demás) es la tolerancia.</p>
+</section>
+
+<section id="t2">
+<h2>Resistencias en serie y en paralelo</h2>
+<h3>Serie: una detrás de otra</h3>
+<p>Circula la misma corriente por todas; las tensiones se reparten.</p>
+<div class="f">R<sub>T</sub> = R<sub>1</sub> + R<sub>2</sub> + R<sub>3</sub> + …<small>La total es siempre mayor que la mayor de ellas.</small></div>
+<h3>Paralelo: todas entre los mismos dos puntos</h3>
+<p>Todas soportan la misma tensión; la corriente se reparte (más por la de menor valor).</p>
+<div class="f">1 / R<sub>T</sub> = 1 / R<sub>1</sub> + 1 / R<sub>2</sub> + 1 / R<sub>3</sub> + …<small>La total es siempre menor que la menor de ellas.</small></div>
+<div class="f">Dos resistencias: R<sub>T</sub> = (R<sub>1</sub> · R<sub>2</sub>) / (R<sub>1</sub> + R<sub>2</sub>)<small>Iguales, n unidades: R<sub>T</sub> = R / n.</small></div>
+<h3>Mixto</h3>
+<p>Se resuelve por partes: primero los paralelos y series más internos, y se va simplificando hasta una sola resistencia equivalente. Después, con la ley de Ohm: I<sub>T</sub> = V / R<sub>T</sub>.</p>
+<div class="lab"><h3>Calculadora serie y paralelo</h3>
+<label for="rl">Valores separados por comas (admite 4k7, 2.2k, 1M)</label><input id="rl" value="6k, 3k">
+<label for="rv">Tensión aplicada (V)</label><input id="rv" inputmode="decimal" value="48">
+<button class="btn" onclick="rl.value='6k, 3k';rv.value=48;upd()">Ejemplo del libro (problema 2.10)</button>
+<div class="res" id="rout"></div>
+<div class="tw"><table id="rtab"></table></div></div>
+</section>
+
+<section id="t3">
+<h2>Condensadores: serie y paralelo</h2>
+<p>Un condensador almacena carga entre dos placas separadas por un dieléctrico. Su capacidad es C = Q / V y se mide en faradios (F).</p>
+<div class="f">C (µF) = 8,84·10<sup>−8</sup> · K · S (cm²) / d (cm)<small>K es la constante dieléctrica: aire 1, papel 3,5, mica 5, cristal 6,5.</small></div>
+<h3>Paralelo: las capacidades se suman</h3>
+<div class="f">C<sub>T</sub> = C<sub>1</sub> + C<sub>2</sub> + C<sub>3</sub> + …<small>Igual tensión en todos; cada uno guarda Q = C · V.</small></div>
+<h3>Serie: es al revés que en las resistencias</h3>
+<div class="f">1 / C<sub>T</sub> = 1 / C<sub>1</sub> + 1 / C<sub>2</sub> + …<small>Dos condensadores: C<sub>T</sub> = (C<sub>1</sub> · C<sub>2</sub>) / (C<sub>1</sub> + C<sub>2</sub>). Iguales: C / n.</small></div>
+<p>En serie todos almacenan la misma carga Q, y la tensión se reparte: V<sub>i</sub> = Q / C<sub>i</sub>. El de menor capacidad soporta más tensión.</p>
+<div class="f">Energía almacenada: E = ½ · C · V²</div>
+<div class="lab"><h3>Calculadora de condensadores</h3>
+<label for="cl">Valores (sufijos p, n, u; sin sufijo se toma µF)</label><input id="cl" value="6, 3">
+<label for="cv">Tensión aplicada (V)</label><input id="cv" inputmode="decimal" value="220">
+<button class="btn" onclick="cl.value='6, 3';cv.value=220;upd()">Ejemplo del libro (problema 2.33)</button>
+<div class="res" id="cout2"></div>
+<div class="tw"><table id="ctab"></table></div></div>
+<div class="lab"><h3>Carga de un condensador (circuito RC)</h3>
+<p>Constante de tiempo τ = R · C. A los 5τ el condensador está prácticamente cargado.</p>
+<div class="f">v = V · (1 − e<sup>−t/RC</sup>)<small>Con t = τ alcanza el 63 % de V; con 5τ, el 99,3 %.</small></div>
+<div class="row"><div><label for="rr">R (Ω, admite k)</label><input id="rr" value="2k"></div><div><label for="rc">C (µF)</label><input id="rc" value="100"></div><div><label for="rV">V (voltios)</label><input id="rV" value="30"></div><div><label for="rt">t (segundos)</label><input id="rt" value="0.2"></div></div>
+<div class="res" id="rcout"></div></div>
+</section>
+
+<section id="t4">
+<h2>Nomenclatura de condensadores</h2>
+<p class="lead">Los condensadores pequeños no escriben el valor completo: usan un código de tres cifras.</p>
+<h3>Código de tres cifras</h3>
+<p>Las dos primeras cifras son el valor y la tercera es el número de ceros. El resultado está en picofaradios (pF).</p>
+<div class="f">104 → 10 y cuatro ceros = 100 000 pF = 100 nF = 0,1 µF<small>473 → 47 000 pF = 47 nF. 102 → 1 000 pF = 1 nF.</small></div>
+<div class="lab"><h3>Descifra un código</h3>
+<div class="row"><div><label for="cc">Código (ej. 104, 473, 4n7)</label><input id="cc" value="104"></div><div><label for="ct">Letra de tolerancia</label><select id="ct"></select></div></div>
+<div class="res" id="ccout"></div></div>
+<h3>Letras de tolerancia</h3>
+<div class="tw"><table><tr><th>Letra</th><th>Tolerancia</th><th>Letra</th><th>Tolerancia</th></tr>
+<tr><td>C</td><td>±0,25 pF</td><td>J</td><td>±5 %</td></tr><tr><td>D</td><td>±0,5 pF</td><td>K</td><td>±10 %</td></tr><tr><td>F</td><td>±1 %</td><td>M</td><td>±20 %</td></tr><tr><td>G</td><td>±2 %</td><td>Z</td><td>+80 % / −20 %</td></tr></table></div>
+<h3>Otras marcas habituales</h3>
+<div class="grid">
+<div class="box"><h4>Electrolíticos</h4><p>Llevan el valor en µF y la tensión máxima (ej. 100 µF 25 V). Tienen polaridad: la franja marca el terminal negativo. Al revés se dañan.</p></div>
+<div class="box"><h4>Tensión máxima</h4><p>A veces va tras la capacidad: 104 63 V, o con letra (1H = 50 V). No la superes.</p></div>
+<div class="box"><h4>Dieléctrico cerámico</h4><p>NP0/C0G: muy estable. X7R: estabilidad media. Y5V y Z5U: capacidad alta pero variable.</p></div>
+<div class="box"><h4>Notación con letra</h4><p>La letra sustituye a la coma: 4n7 = 4,7 nF; 2µ2 = 2,2 µF; p47 = 0,47 pF.</p></div>
+</div>
+<div class="tw"><table><tr><th>Unidad</th><th>Equivalencia</th></tr><tr><td>1 µF</td><td>1 000 nF = 1 000 000 pF</td></tr><tr><td>1 nF</td><td>1 000 pF</td></tr><tr><td>1 KpF (libro)</td><td>1 nF</td></tr></table></div>
+</section>
+
+<section id="t5">
+<h2>Bobinas</h2>
+<p>Una bobina es un hilo enrollado que almacena energía en su campo magnético. Su coeficiente de autoinducción L se mide en henrios (H).</p>
+<div class="f">L (H) = 1,257 · N² · S (cm²) / (10<sup>8</sup> · l (cm)) · µ<small>N: espiras. S: sección del núcleo. l: longitud. µ: permeabilidad del núcleo (aire = 1).</small></div>
+<p>Más espiras, más sección o un núcleo ferromagnético aumentan L; más longitud la reduce. El número de espiras pesa al cuadrado.</p>
+<div class="f">Energía: E = ½ · L · I²</div>
+<h3>Asociación</h3>
+<p>Sin acoplamiento magnético entre ellas, se comportan como las resistencias:</p>
+<div class="f">Serie: L<sub>T</sub> = L<sub>1</sub> + L<sub>2</sub> + …<small>Paralelo: 1 / L<sub>T</sub> = 1 / L<sub>1</sub> + 1 / L<sub>2</sub> + …</small></div>
+<div class="lab"><h3>Calculadora de una bobina</h3>
+<div class="row"><div><label for="bn">Espiras N</label><input id="bn" value="2000"></div><div><label for="bs">Sección S (cm²)</label><input id="bs" value="2"></div><div><label for="bl">Longitud l (cm)</label><input id="bl" value="15"></div><div><label for="bm">Permeabilidad µ</label><input id="bm" value="262"></div><div><label for="bi">Corriente I (A)</label><input id="bi" value="1"></div></div>
+<button class="btn" onclick="bn.value=2000;bs.value=2;bl.value=15;bm.value=262;upd()">Ejemplo del libro (problema 1.39)</button>
+<div class="res" id="bout"></div></div>
+<div class="lab"><h3>Bobinas en serie y paralelo</h3>
+<label for="ll">Valores separados por comas (mH por defecto; admite u, m, H)</label><input id="ll" value="10, 20, 30">
+<div class="res" id="lout"></div></div>
+</section>
+</main>
+<script>
+var $=function(i){return document.getElementById(i)};
+var names=["Fundamentos","Tipos de resistencias","Resistencias serie y paralelo","Condensadores","Nomenclatura","Bobinas"];
+var tabs=$("tabs");
+names.forEach(function(n,i){var b=document.createElement("button");b.textContent=n;b.setAttribute("role","tab");b.onclick=function(){show(i)};tabs.appendChild(b)});
+function show(i){names.forEach(function(_,j){$("t"+j).classList.toggle("on",i===j);tabs.children[j].setAttribute("aria-selected",i===j)});window.scrollTo(0,0)}
+function num(s,u){s=String(s).trim().replace(",",".");if(s==="")return NaN;var m=s.match(/^(\d*\.?\d*)([kKMRrpnuµmH]?)(\d*)$/);if(!m)return NaN;var x=parseFloat(m[1]+(m[3]?"."+m[3]:""));if(m[1]==="")x=parseFloat("0."+m[3]);var f=1,k=m[2];if(k==="k"||k==="K")f=1e3;else if(k==="M"&&u==="R")f=1e6;else if(k==="p")f=1e-12;else if(k==="n")f=1e-9;else if(k==="u"||k==="µ")f=1e-6;else if(k==="m")f=1e-3;else if(!k)f=u==="C"?1e-6:u==="L"?1e-3:1;return x*f}
+function list(s,u){return s.split(/[;\s]*,[;\s]*|\s+/).map(function(t){return num(t,u)}).filter(function(v){return v>0})}
+function g(x,u){if(!isFinite(x))return "–";var a=Math.abs(x),t=[["R",[[1e6,"MΩ"],[1e3,"kΩ"],[1,"Ω"],[1e-3,"mΩ"]]],["C",[[1,"F"],[1e-3,"mF"],[1e-6,"µF"],[1e-9,"nF"],[1e-12,"pF"]]],["L",[[1,"H"],[1e-3,"mH"],[1e-6,"µH"]]],["A",[[1,"A"],[1e-3,"mA"],[1e-6,"µA"]]],["W",[[1,"W"],[1e-3,"mW"],[1e-6,"µW"]]],["J",[[1,"J"],[1e-3,"mJ"],[1e-6,"µJ"]]],["Q",[[1,"C"],[1e-3,"mC"],[1e-6,"µC"],[1e-9,"nC"]]]];var arr=t.concat([["V",[[1,"V"],[1e-3,"mV"]]]]).filter(function(e){return e[0]===u})[0][1],p=arr[arr.length-1];for(var i=0;i<arr.length;i++){if(a>=arr[i][0]*0.9999){p=arr[i];break}}return (Math.round(x/p[0]*1000)/1000).toString().replace(".",",")+" "+p[1]}
+function card(l,v){return "<div><span>"+l+"</span><b>"+v+"</b></div>"}
+function sp(a){var s=0,p=0;a.forEach(function(x){s+=x;p+=1/x});return[s,1/p]}
+function ser(a){return 1/a.reduce(function(s,x){return s+1/x},0)}
+function upd(){
+ var v=num($("ov").value),i=num($("oi").value),r=num($("or").value),h="";
+ if(isNaN(v)&&!isNaN(i)&&!isNaN(r))v=i*r;else if(isNaN(i)&&!isNaN(v)&&!isNaN(r))i=v/r;else if(isNaN(r)&&!isNaN(v)&&!isNaN(i))r=v/i;
+ if(isFinite(v)&&isFinite(i)&&isFinite(r))h=card("Tensión",g(v,"V"))+card("Intensidad",g(i,"A"))+card("Resistencia",g(r,"R"))+card("Potencia P = V·I",g(v*i,"W"));else h="<div><span>Deja exactamente una casilla vacía</span></div>";
+ $("oout").innerHTML=h;
+ // resistencias
+ var R=list($("rl").value,"R"),V=num($("rv").value),o="",t="";
+ if(R.length>1){var q=sp(R);o=card("Serie R<sub>T</sub>",g(q[0],"R"))+card("Paralelo R<sub>T</sub>",g(q[1],"R"));
+  if(V>0){t="<tr><th>Resistencia</th><th>En serie: caída</th><th>En paralelo: corriente</th></tr>";var Is=V/q[0];
+   R.forEach(function(x,k){t+="<tr><td>R"+(k+1)+" = "+g(x,"R")+"</td><td>"+g(Is*x,"V")+"</td><td>"+g(V/x,"A")+"</td></tr>"});
+   t+="<tr><td>Total</td><td>I = "+g(Is,"A")+"</td><td>I = "+g(V/q[1],"A")+"</td></tr>"}}else o="<div><span>Escribe al menos dos valores</span></div>";
+ $("rout").innerHTML=o;$("rtab").innerHTML=t;
+ // condensadores
+ var C=list($("cl").value,"C"),W=num($("cv").value);o="";t="";
+ if(C.length>1){var s=ser(C),pp=C.reduce(function(a,b){return a+b},0);o=card("Serie C<sub>T</sub>",g(s,"C"))+card("Paralelo C<sub>T</sub>",g(pp,"C"));
+  if(W>0){var Q=s*W;t="<tr><th>Condensador</th><th>En serie: tensión</th><th>En paralelo: carga</th></tr>";
+   C.forEach(function(x,k){t+="<tr><td>C"+(k+1)+" = "+g(x,"C")+"</td><td>"+(Math.round(Q/x*100)/100).toString().replace(".",",")+" V</td><td>"+g(x*W,"Q")+"</td></tr>"});
+   t+="<tr><td>Total</td><td>Q = "+g(Q,"Q")+"; E = "+g(.5*s*W*W,"J")+"</td><td>Q = "+g(pp*W,"Q")+"; E = "+g(.5*pp*W*W,"J")+"</td></tr>"}}else o="<div><span>Escribe al menos dos valores</span></div>";
+ $("cout2").innerHTML=o;$("ctab").innerHTML=t;
+ // RC
+ var rr=num($("rr").value,"R"),cc=num($("rc").value,"C"),vv=num($("rV").value),tt=num($("rt").value);
+ if(rr>0&&cc>0)$("rcout").innerHTML=card("Constante τ = R·C",(Math.round(rr*cc*1e4)/1e4).toString().replace(".",",")+" s")+card("Carga total 5τ",(Math.round(5*rr*cc*1e3)/1e3).toString().replace(".",",")+" s")+card("Tensión en t",(Math.round(vv*(1-Math.exp(-tt/(rr*cc)))*100)/100).toString().replace(".",",")+" V ("+Math.round(100*(1-Math.exp(-tt/(rr*cc))))+" %)")+card("I máxima = V/R",g(vv/rr,"A"));
+ // código condensador
+ var code=$("cc").value.trim().toLowerCase(),pF=NaN,m3=code.match(/^(\d)(\d)(\d)$/),ml=code.match(/^(\d*)(p|n|u|µ)(\d*)$/);
+ if(m3)pF=(+(m3[1]+m3[2]))*Math.pow(10,+m3[3]);else if(ml&&(ml[1]||ml[3])){var base=parseFloat((ml[1]||"0")+"."+(ml[3]||"0"));pF=base*{p:1,n:1e3,u:1e6,"µ":1e6}[ml[2]]}else if(/^\d+$/.test(code))pF=+code;
+ var tl=$("ct").value;
+ $("ccout").innerHTML=isNaN(pF)?"<div><span>Código no válido</span></div>":card("En picofaradios",(Math.round(pF*100)/100).toString().replace(".",",")+" pF")+card("En nanofaradios",(Math.round(pF/10)/100).toString().replace(".",",")+" nF")+card("En microfaradios",(pF/1e6).toString().replace(".",",")+" µF")+(tl?card("Tolerancia",tl):"");
+ // bobina
+ var N=num($("bn").value),S=num($("bs").value),l=num($("bl").value),mu=num($("bm").value),Ib=num($("bi").value);
+ if(N>0&&S>0&&l>0&&mu>0){var L=1.257*N*N*S/(1e8*l)*mu;$("bout").innerHTML=card("Autoinducción L",g(L,"L"))+card("Energía ½·L·I²",g(.5*L*Ib*Ib,"J"));}else $("bout").innerHTML="<div><span>Completa todos los datos con números positivos</span></div>";
+ var Ls=list($("ll").value,"L");
+ $("lout").innerHTML=Ls.length>1?card("Serie L<sub>T</sub>",g(Ls.reduce(function(a,b){return a+b},0),"L"))+card("Paralelo L<sub>T</sub>",g(ser(Ls),"L")):"<div><span>Escribe al menos dos valores</span></div>";
+}
+// colores
+var col=[["Negro","#111"],["Marrón","#7b4a1e"],["Rojo","#d62828"],["Naranja","#f77f00"],["Amarillo","#f2d000"],["Verde","#2a9d4a"],["Azul","#1d4ed8"],["Violeta","#7b2cbf"],["Gris","#8d99ae"],["Blanco","#f8f9fa"]];
+function fill(id,items,sel){var s=$(id);items.forEach(function(it,k){var o=document.createElement("option");o.value=k;o.textContent=it[0];s.appendChild(o)});s.value=sel;s.onchange=color}
+fill("c1",col,2);fill("c2",col,2);
+fill("c3",col.slice(0,7).map(function(c,k){return[c[0]+" (×10"+(k===1?"":"^"+k)+")",c[1]]}).concat([["Dorado (×0,1)","#d4a017"],["Plata (×0,01)","#b8c0cc"]]),1);
+fill("c4",[["Marrón ±1 %","#7b4a1e"],["Rojo ±2 %","#d62828"],["Dorado ±5 %","#d4a017"],["Plata ±10 %","#b8c0cc"]],2);
+var mult=[1,10,100,1e3,1e4,1e5,1e6,.1,.01],tol=["1","2","5","10"];
+function color(){var a=+$("c1").value,b=+$("c2").value,m=+$("c3").value,t=+$("c4").value;
+ $("b1").setAttribute("fill",col[a][1]);$("b2").setAttribute("fill",col[b][1]);
+ $("b3").setAttribute("fill",$("c3").selectedIndex<7?col[m][1]:(m===7?"#d4a017":"#b8c0cc"));
+ $("b4").setAttribute("fill",["#7b4a1e","#d62828","#d4a017","#b8c0cc"][t]);
+ var val=(a*10+b)*mult[m];$("cout").innerHTML=card("Valor",g(val,"R"))+card("Tolerancia","±"+tol[t]+" %")+card("Rango real",g(val*(1-tol[t]/100),"R")+" a "+g(val*(1+tol[t]/100),"R"))}
+// tolerancia select
+var ts=$("ct");[["","Sin letra"],["±0,25 pF","C"],["±0,5 pF","D"],["±1 %","F"],["±2 %","G"],["±5 %","J"],["±10 %","K"],["±20 %","M"],["+80 % / −20 %","Z"]].forEach(function(e){var o=document.createElement("option");o.value=e[0];o.textContent=e[1];ts.appendChild(o)});
+document.querySelectorAll("input").forEach(function(e){e.addEventListener("input",upd)});ts.onchange=upd;
+color();upd();show(0);
+</script>
+</body>
+</html>
